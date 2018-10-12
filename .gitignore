@@ -17,6 +17,9 @@
 !/log/.keep
 !/tmp/.keep
 
+# Ignore test coverage reports
+/coverage
+
 # Ignore uploaded files in development
 /storage/*
 
