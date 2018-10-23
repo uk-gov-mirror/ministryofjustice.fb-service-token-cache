@@ -1,0 +1,44 @@
+language: ruby
+
+addons:
+  postgresql: 10
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+services:
+  - postgresql
+
+rvm:
+    - 2.5.1
+
+before_install:
+  - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+  - sudo service postgresql restart
+  - sleep 1
+
+before_script:
+  - psql -c 'select version();' # just to check the version, would also allow to check that pg is running
+  - psql -c "select * from pg_settings where name = 'port';" # check port settings
+
+script:
+    - bundle exec rails db:reset db:setup db:migrate RAILS_ENV=test
+    - bundle exec rspec
+
+sudo: required
+
+services:
+  - docker
+
+after_success:
+  - docker --version  # document the version travis is using
+  - pip install --user awscli # install aws cli w/o sudo
+  - export PATH=$PATH:$HOME/.local/bin # put aws in the path
+  - eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
+  - docker build -t $ECR_REPO_NAME:latest-dev .
+  - docker tag $ECR_REPO_NAME:latest-dev $ECR_REPO_URL:latest-dev
+  - docker push $ECR_REPO_URL:latest-dev
+
+env:
+  global:
+  - PGPORT=5433
