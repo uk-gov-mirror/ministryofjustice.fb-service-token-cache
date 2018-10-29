@@ -14,15 +14,14 @@ init:
 	$(eval export ECR_REPO_NAME=fb-service-token-cache)
 	$(eval export ECR_REPO_URL=926803513772.dkr.ecr.eu-west-1.amazonaws.com/formbuilder-dev/fb-service-token-cache)
 
-# Needs ECR_REPO_NAME & ECR_REPO_URL env vars
+# install aws cli w/o sudo
 install_build_dependencies: init
-	# install aws cli w/o sudo
 	docker --version
 	pip install --user awscli
 	$(eval export PATH=${PATH}:${HOME}/.local/bin/)
-	echo $(shell which aws)
 
 
+# Needs ECR_REPO_NAME & ECR_REPO_URL env vars
 build: install_build_dependencies
 	docker build -t ${ECR_REPO_NAME}:latest-${env_stub} -f docker/Dockerfile . && \
 		docker tag ${ECR_REPO_NAME}:latest-${env_stub} ${ECR_REPO_URL}:latest-${env_stub}
