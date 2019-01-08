@@ -12,7 +12,7 @@ production:
 
 init:
 	$(eval export ECR_REPO_NAME=fb-service-token-cache)
-	$(eval export ECR_REPO_URL=926803513772.dkr.ecr.eu-west-1.amazonaws.com/formbuilder-dev/fb-service-token-cache)
+	$(eval export ECR_REPO_URL=926803513772.dkr.ecr.eu-west-1.amazonaws.com/formbuilder/fb-service-token-cache)
 
 # install aws cli w/o sudo
 install_build_dependencies: init
