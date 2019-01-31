@@ -97,17 +97,7 @@ See the `Makefile` for more info.
 
 The generated config for each platform/deployment environment combination is written to `/tmp/fb-service-token-cache-$PLATFORM_ENV-$DEPLOYMENT_ENV.yaml`
 
-### 4. Running the Rails setup scripts
-
-The first time the infrastructure is created, the Rails setup scripts need to be run. This needs to be run on one of the pods that has been created 
-
-```bash
-kubectl exec -ti $PODNAME --namespace=formbuilder-platform-$PLATFORM_ENV-$DEPLOYMENT_ENV  -- bundle exec rails db:setup db:migrate
-```
-
-**TODO: Make rails setup run automatically without failure preventing further scripts running**
-
-### 5. Deploying an updated docker image to existing infrastructure
+### 4. Deploying an updated docker image to existing infrastructure
 
 Deleting the currently running pods will trigger the kubernetes Deployment to recreate pods until it has its specified minimum number running - as the Deployment has `imagePullPolicy: Always`, it will pull the latest docker image from Cloud Platform's ECR.
 
