@@ -1,5 +1,6 @@
 {
   "name": "fb-service-token-cache",
+  "private": true,
   "version": "1.0.0",
   "description": "Form Builder Service Token Cache",
   "scripts": {

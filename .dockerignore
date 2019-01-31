@@ -1,5 +1,4 @@
 deploy/
-bin/
 scripts/
 tmp/
 node_modules/

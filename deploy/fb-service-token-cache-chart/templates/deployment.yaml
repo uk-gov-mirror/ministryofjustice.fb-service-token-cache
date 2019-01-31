@@ -29,7 +29,7 @@ spec:
           - name: KUBECTL_BEARER_TOKEN
             valueFrom:
               secretKeyRef:
-                name: formbuilder-service-token-cache-{{ .Values.environmentName }}-token-{{ .Values.KUBECTL_BEARER_TOKEN_SUFFIX }}
+                name: {{ .Values.KUBECTL_BEARER_TOKEN }}
                 key: token
           - name: KUBECTL_SERVICES_NAMESPACE
             value: formbuilder-services-{{ .Values.environmentName }}
