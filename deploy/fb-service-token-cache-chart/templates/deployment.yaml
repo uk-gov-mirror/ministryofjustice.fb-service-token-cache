@@ -1,0 +1,56 @@
+---
+# web front-end
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "fb-service-token-cache-{{ .Values.environmentName }}"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: "fb-service-token-cache-{{ .Values.environmentName }}"
+        appGroup: "fb-service-token-cache"
+        tier: "frontend"
+    spec:
+      serviceAccountName: "formbuilder-service-token-cache-{{ .Values.environmentName }}"
+      containers:
+      - name: "fb-service-token-cache-{{ .Values.environmentName }}"
+        image: "926803513772.dkr.ecr.eu-west-1.amazonaws.com/formbuilder/fb-service-token-cache:latest-{{ .Values.platformEnv }}"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+        # non-secret env vars
+        # defined in config_map.yaml
+        envFrom:
+          - configMapRef:
+              name: fb-service-token-cache-env-{{ .Values.environmentName }}
+        env:
+          - name: KUBECTL_BEARER_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.KUBECTL_BEARER_TOKEN }}
+                key: token
+          - name: KUBECTL_SERVICES_NAMESPACE
+            value: formbuilder-services-{{ .Values.environmentName }}
+          # secrets created by terraform
+          # to access infrastructure defined in
+          # cloud-platforms-environments
+          - name: REDIS_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: elasticache-formbuilder-service-token-cache-{{ .Values.environmentName }}
+                key: auth_token
+          # must use 'rediss' (two s'es) when TLS is enabled
+          - name: REDIS_PROTOCOL
+            value: 'rediss://'
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: elasticache-formbuilder-service-token-cache-{{ .Values.environmentName }}
+                key: primary_endpoint_address
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: fb-service-token-cache-app-secrets-{{ .Values.environmentName }}
+                key: secret_key_base
