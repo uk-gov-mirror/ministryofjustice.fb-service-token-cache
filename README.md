@@ -1,4 +1,6 @@
 # fb-service-token-cache
+[![Build Status](https://travis-ci.org/ministryofjustice/fb-service-token-cache.svg?branch=master)](https://travis-ci.org/ministryofjustice/fb-service-token-cache)
+
 A stand-alone microservice providing a REST endpoint from which other Form
 Builder platform apps (User Datastore, Submitter) can retrieve service tokens.
 
