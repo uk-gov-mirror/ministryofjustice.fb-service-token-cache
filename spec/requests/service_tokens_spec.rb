@@ -12,7 +12,6 @@ describe 'ServiceToken API', type: :request do
     context 'to /service/:service_slug' do
       let(:url) { "/service/#{service_slug}" }
 
-
       context 'when the service slug has a corresponding token' do
         before do
           allow(ServiceTokenService).to receive(:get).with(service_slug).and_return('mytoken')
