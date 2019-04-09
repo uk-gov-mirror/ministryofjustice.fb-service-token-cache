@@ -1,13 +1,21 @@
 class Adapters::KubectlAdapter
   attr_reader :secret_name, :namespace
 
-  def self.get_secret(name)
-    instance = new(secret_name: name)
+  def self.get_service_secret(name)
+    namespace = ENV['KUBECTL_SERVICES_NAMESPACE']
+    instance = new(secret_name: name, namespace: namespace)
     instance.get_secret
   end
 
-  def initialize(secret_name:)
+  def self.get_platform_secret(name)
+    namespace = ENV['KUBECTL_PLATFORM_NAMESPACE']
+    instance = new(secret_name: name, namespace: namespace)
+    instance.get_secret
+  end
+
+  def initialize(secret_name:, namespace:)
     @secret_name = secret_name
+    @namespace = namespace
   end
 
   def get_secret
@@ -32,8 +40,7 @@ class Adapters::KubectlAdapter
   end
 
   def kubectl_args(context: ENV['KUBECTL_CONTEXT'],
-                   bearer_token: ENV['KUBECTL_BEARER_TOKEN'],
-                   namespace: ENV['KUBECTL_SERVICES_NAMESPACE'])
+                   bearer_token: ENV['KUBECTL_BEARER_TOKEN'])
     args = []
     args << '--context=' + context unless context.blank?
     args << '--namespace=' + namespace unless namespace.blank?

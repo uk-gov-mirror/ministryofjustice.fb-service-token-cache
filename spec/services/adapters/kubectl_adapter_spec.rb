@@ -2,13 +2,14 @@ require 'rails_helper'
 
 describe Adapters::KubectlAdapter do
   let(:secret_name) { 'my-secret' }
+  let(:namespace) { 'my-namespace' }
 
   before do
     allow(Adapters::ShellAdapter).to receive(:output_of).and_return('some output')
   end
 
   subject do
-    described_class.new(secret_name: secret_name)
+    described_class.new(secret_name: secret_name, namespace: namespace)
   end
 
   describe '#get_secret' do
