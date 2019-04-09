@@ -22,6 +22,7 @@ end
 
 group :development do
   gem 'listen'
+  gem 'guard-rspec', require: false
 end
 
 group :test do
