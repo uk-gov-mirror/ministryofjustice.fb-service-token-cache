@@ -54,5 +54,15 @@ describe Adapters::KubectlAdapter do
     it 'returns the decoded token' do
       expect(subject.get_secret).to eq('decoded token')
     end
+
+    context 'when shell adapter retruns empty string' do
+      before :each do
+        expect(Adapters::ShellAdapter).to receive(:output_of).with('kubectl cmd').and_return('')
+      end
+
+      it 'returns nil' do
+        expect(subject.get_secret).to be_nil
+      end
+    end
   end
 end

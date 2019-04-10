@@ -19,13 +19,15 @@ class Adapters::KubectlAdapter
   end
 
   def get_secret
+    return nil if json.blank?
+
     Base64.decode64(JSON.parse(json)['data']['token'])
   end
 
   private
 
   def json
-    Adapters::ShellAdapter.output_of(kubectl_cmd)
+    @json ||= Adapters::ShellAdapter.output_of(kubectl_cmd)
   end
 
   def kubectl_cmd
@@ -45,6 +47,7 @@ class Adapters::KubectlAdapter
     args << '--context=' + context unless context.blank?
     args << '--namespace=' + namespace unless namespace.blank?
     args << '--token=' + bearer_token  unless bearer_token.blank?
+    args << '--ignore-not-found=true'
 
     args.compact.join(' ')
   end
