@@ -1,14 +1,36 @@
 class Adapters::KubectlAdapter
-  def self.get_secret(name)
-    json = Adapters::ShellAdapter.output_of(
-      kubectl_cmd(name)
-    )
-    Base64.decode64(
-      JSON.parse(json)['data']['token']
-    )
+  attr_reader :secret_name, :namespace
+
+  def self.get_service_secret(name)
+    namespace = ENV['KUBECTL_SERVICES_NAMESPACE']
+    instance = new(secret_name: name, namespace: namespace)
+    instance.get_secret
   end
 
-  def self.kubectl_cmd(secret_name)
+  def self.get_platform_secret(name)
+    namespace = ENV['KUBECTL_PLATFORM_NAMESPACE']
+    instance = new(secret_name: name, namespace: namespace)
+    instance.get_secret
+  end
+
+  def initialize(secret_name:, namespace:)
+    @secret_name = secret_name
+    @namespace = namespace
+  end
+
+  def get_secret
+    return nil if json.blank?
+
+    Base64.decode64(JSON.parse(json)['data']['token'])
+  end
+
+  private
+
+  def json
+    @json ||= Adapters::ShellAdapter.output_of(kubectl_cmd)
+  end
+
+  def kubectl_cmd
     [
       kubectl_binary,
       'get',
@@ -19,21 +41,18 @@ class Adapters::KubectlAdapter
     ] + [kubectl_args]
   end
 
-  private
-
-  def self.kubectl_args(  context: ENV['KUBECTL_CONTEXT'],
-                          bearer_token: ENV['KUBECTL_BEARER_TOKEN'],
-                          namespace: ENV['KUBECTL_SERVICES_NAMESPACE'])
+  def kubectl_args(context: ENV['KUBECTL_CONTEXT'],
+                   bearer_token: ENV['KUBECTL_BEARER_TOKEN'])
     args = []
     args << '--context=' + context unless context.blank?
     args << '--namespace=' + namespace unless namespace.blank?
     args << '--token=' + bearer_token  unless bearer_token.blank?
+    args << '--ignore-not-found=true'
 
     args.compact.join(' ')
   end
 
-  def self.kubectl_binary
+  def kubectl_binary
     Adapters::ShellAdapter.output_of('which kubectl')
   end
-
 end

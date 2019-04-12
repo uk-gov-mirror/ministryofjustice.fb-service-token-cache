@@ -33,6 +33,8 @@ spec:
                 key: token
           - name: KUBECTL_SERVICES_NAMESPACE
             value: formbuilder-services-{{ .Values.environmentName }}
+          - name: KUBECTL_PLATFORM_NAMESPACE
+            value: formbuilder-platform-{{ .Values.environmentName }}
           # secrets created by terraform
           # to access infrastructure defined in
           # cloud-platforms-environments
