@@ -1,18 +1,5 @@
 FROM ministryofjustice/ruby:2.5.1
 
-RUN apt-get update
-
-ENV RAILS_ROOT /var/www/fb-service-token-cache
-RUN mkdir -p $RAILS_ROOT
-WORKDIR $RAILS_ROOT
-
-COPY Gemfile.lock Gemfile ./
-RUN gem install bundler
-RUN bundle install --jobs 20 --retry 5 
-
-COPY . .
-ADD . $RAILS_ROOT
-
 # install kubectl as described at
 # https://kubernetes.io/docs/tasks/tools/install-kubectl/
 RUN apt-get update && apt-get install -y apt-transport-https
@@ -22,6 +9,18 @@ RUN echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/ap
 RUN apt-get update
 RUN apt-get install -y kubectl
 
+ENV RAILS_ROOT /var/www/fb-service-token-cache
+RUN mkdir -p $RAILS_ROOT
+
+WORKDIR $RAILS_ROOT
+
+COPY . $RAILS_ROOT
+RUN gem install bundler
+RUN bundle install --jobs 4 --retry 5 --deployment --without test development
+
+RUN groupadd -r deploy && useradd -m -u 1001 -r -g deploy deploy
+RUN chown -R deploy $RAILS_ROOT
+USER 1001
 
 # allow access to port 3000
 ENV APP_PORT 3000

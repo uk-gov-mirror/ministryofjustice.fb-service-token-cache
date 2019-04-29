@@ -7,3 +7,4 @@ package_lock.json
 coverage/
 spec/
 log/*.log
+.git/
