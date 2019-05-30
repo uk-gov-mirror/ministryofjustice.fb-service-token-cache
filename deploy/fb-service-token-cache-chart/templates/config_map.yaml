@@ -8,3 +8,4 @@ data:
   RAILS_SERVE_STATIC_FILES: "false"
   FB_ENVIRONMENT_SLUG: "{{ .Values.environmentName }}"
   SERVICE_TOKEN_CACHE_TTL: "60"
+  RAILS_LOG_TO_STDOUT: "true"
