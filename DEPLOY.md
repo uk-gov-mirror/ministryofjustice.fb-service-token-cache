@@ -27,10 +27,6 @@ To use the following scripts, first run `npm install`
 
   Script to initialise/update Kubernetes deployments for a platform environment
 
-- `scripts/restart_platform_pods.sh`
-
-  Script to explicitly restart pods in a platform environment
-
 All these scripts print out their usage instructions by being run with the `-h` flag
 
 ## Configuration files
@@ -90,29 +86,9 @@ See the `Makefile` for more info.
     - `secret_key_base`
       Rails secret
 
-- Run the `scripts/deploy_platform.sh` script which 
+- Run the `scripts/deploy_platform.sh` script which
 
   - generates the necessary kubernetees configuration to deploy the application
   - applies the configuration
 
 The generated config for each platform/deployment environment combination is written to `/tmp/fb-service-token-cache-$PLATFORM_ENV-$DEPLOYMENT_ENV.yaml`
-
-### 4. Deploying an updated docker image to existing infrastructure
-
-Deleting the currently running pods will trigger the kubernetes Deployment to recreate pods until it has its specified minimum number running - as the Deployment has `imagePullPolicy: Always`, it will pull the latest docker image from Cloud Platform's ECR.
-
-`scripts/restart_platform_pods.sh` is a convenience script that deletes all pods in all deployment environments accross a platform environment.
-
-Running
-
-```bash
-scripts/restart_platform_pods.sh -p $PLATFORM_ENV
-```
-
-is equivalent to
-
-```bash
-kubectl delete pods -l appGroup=fb-service-token-cache --namespace=formbuilder-platform-$PLATFORM_ENV-dev &\
-kubectl delete pods -l appGroup=fb-service-token-cache --namespace=formbuilder-platform-$PLATFORM_ENV-staging &\
-kubectl delete pods -l appGroup=fb-service-token-cache --namespace=formbuilder-platform-$PLATFORM_ENV-production &
-```
