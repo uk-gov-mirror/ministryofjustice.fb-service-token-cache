@@ -8,9 +8,9 @@ gem 'puma', '~> 3.11'
 gem 'redis', '~> 4.0'
 gem 'sentry-raven'
 gem 'jwt'
+gem 'sqlite3'
 
 group :development, :test do
-  gem 'sqlite3'
   gem 'dotenv-rails', require: 'dotenv/rails-now'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '>= 3.5.0'
