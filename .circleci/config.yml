@@ -20,10 +20,10 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "4a:a2:34:ab:96:b7:42:45:86:7c:bd:ce:ee:70:2a:28"
+            - "e3:25:34:15:2b:c4:d3:b7:c3:94:9f:50:dd:c3:0f:de"
       - run:
           name: checkout fb-service-token-cache-deploy
-          command: "GIT_SSH_COMMAND='ssh -v -i ~/.ssh/id_rsa_4aa234ab96b74245867cbdceee702a28 -o \"IdentitiesOnly=yes\"' git clone git@github.com:ministryofjustice/fb-service-token-cache-deploy.git ~/circle/git/fb-service-token-cache-deploy"
+          command: "GIT_SSH_COMMAND='ssh -v -i ~/.ssh/id_rsa_e32534152bc4d3b7c3949f50ddc30fde -o \"IdentitiesOnly=yes\"' git clone git@github.com:ministryofjustice/fb-service-token-cache-deploy.git ~/circle/git/fb-service-token-cache-deploy"
       - run:
           name: persist git crypt key to disk
           command: "echo $ENCODED_GIT_CRYPT_KEY | base64 -d > /root/circle/git_crypt.key"
@@ -54,10 +54,10 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "4a:a2:34:ab:96:b7:42:45:86:7c:bd:ce:ee:70:2a:28"
+            - "e3:25:34:15:2b:c4:d3:b7:c3:94:9f:50:dd:c3:0f:de"
       - run:
           name: checkout fb-service-token-cache-deploy
-          command: "GIT_SSH_COMMAND='ssh -v -i ~/.ssh/id_rsa_4aa234ab96b74245867cbdceee702a28 -o \"IdentitiesOnly=yes\"' git clone git@github.com:ministryofjustice/fb-service-token-cache-deploy.git ~/circle/git/fb-service-token-cache-deploy"
+          command: "GIT_SSH_COMMAND='ssh -v -i ~/.ssh/id_rsa_e32534152bc4d3b7c3949f50ddc30fde -o \"IdentitiesOnly=yes\"' git clone git@github.com:ministryofjustice/fb-service-token-cache-deploy.git ~/circle/git/fb-service-token-cache-deploy"
       - run:
           name: persist git crypt key to disk
           command: "echo $ENCODED_GIT_CRYPT_KEY | base64 -d > /root/circle/git_crypt.key"
