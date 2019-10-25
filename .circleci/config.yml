@@ -46,40 +46,6 @@ jobs:
       - run:
           name: deploy to test production
           command: './scripts/circleci_deploy.sh test production $KUBE_TOKEN_TEST_PRODUCTION'
-  build_and_deploy_to_integration:
-    working_directory: ~/circle/git/fb-service-token-cache
-    docker:
-      - image: asmega/fb-builder:latest
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "4a:a2:34:ab:96:b7:42:45:86:7c:bd:ce:ee:70:2a:28"
-      - run:
-          name: checkout fb-service-token-cache-deploy
-          command: "GIT_SSH_COMMAND='ssh -v -i ~/.ssh/id_rsa_4aa234ab96b74245867cbdceee702a28 -o \"IdentitiesOnly=yes\"' git clone git@github.com:ministryofjustice/fb-service-token-cache-deploy.git ~/circle/git/fb-service-token-cache-deploy"
-      - run:
-          name: persist git crypt key to disk
-          command: "echo $ENCODED_GIT_CRYPT_KEY | base64 -d > /root/circle/git_crypt.key"
-      - run:
-          name: unlock git crypt
-          command: "cd ~/circle/git/fb-service-token-cache-deploy && git-crypt unlock /root/circle/git_crypt.key"
-      - run:
-          name: npm install
-          command: 'npm install'
-      - setup_remote_docker
-      - run:
-          name: build and push docker images
-          command: './scripts/circleci_build.sh integration'
-      - run:
-          name: deploy to integration dev
-          command: './scripts/circleci_deploy.sh integration dev $KUBE_TOKEN_INTEGRATION_DEV'
-      - run:
-          name: deploy to integration staging
-          command: './scripts/circleci_deploy.sh integration staging $KUBE_TOKEN_INTEGRATION_STAGING'
-      - run:
-          name: deploy to integration production
-          command: './scripts/circleci_deploy.sh integration production $KUBE_TOKEN_INTEGRATION_PRODUCTION'
   build_and_deploy_to_live:
     working_directory: ~/circle/git/fb-service-token-cache
     docker:
@@ -126,17 +92,10 @@ workflows:
           filters:
             branches:
               only: master
-      - confirm_integration_deploy:
-          type: approval
-          requires:
-            - build_and_deploy_to_test
-      - build_and_deploy_to_integration:
-          requires:
-            - confirm_integration_deploy
       - confirm_live_deploy:
           type: approval
           requires:
-            - build_and_deploy_to_integration
+            - build_and_deploy_to_test
       - build_and_deploy_to_live:
           requires:
             - confirm_live_deploy
