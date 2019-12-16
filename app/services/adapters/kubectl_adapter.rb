@@ -24,6 +24,19 @@ class Adapters::KubectlAdapter
     Base64.decode64(JSON.parse(json)['data']['token'])
   end
 
+  def get_public_key
+    command = [
+      kubectl_binary,
+      'get',
+      'configmaps',
+      '-o',
+      "jsonpath='{.data.ENCODED_PUBLIC_KEY}'",
+      "fb-#{secret_name}-config-map",
+    ] + [kubectl_args]
+
+    Adapters::ShellAdapter.output_of(command)
+  end
+
   private
 
   def json
