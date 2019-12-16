@@ -16,6 +16,8 @@ class Adapters::KubectlAdapter
   def initialize(secret_name:, namespace:)
     @secret_name = secret_name
     @namespace = namespace
+
+    validate_params!
   end
 
   def get_secret
@@ -38,6 +40,16 @@ class Adapters::KubectlAdapter
   end
 
   private
+
+  def validate_params!
+    if !secret_name.match(/\A[a-zA-Z0-9\-_]*\z/)
+      raise ArgumentError.new('rejected potentially dangerous secret_name')
+    end
+
+    if !namespace.match(/\A[a-zA-Z0-9\-_]*\z/)
+      raise ArgumentError.new('rejected potentially dangerous namespace')
+    end
+  end
 
   def json
     @json ||= Adapters::ShellAdapter.output_of(kubectl_cmd)
