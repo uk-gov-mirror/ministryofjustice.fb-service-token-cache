@@ -19,7 +19,6 @@ class CacheEntry
     Time.current.utc
   end
 
-
   def self.serialize(data)
     # TTL is handled by the CacheEntry itself
     CacheEntry.new(
