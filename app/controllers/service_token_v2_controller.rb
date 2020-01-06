@@ -1,9 +1,10 @@
 class ServiceTokenV2Controller < ApplicationController
   def show
-    token = Support::ServiceTokenAuthoritativeSource.get_public_key(service_slug: params[:service_slug])
+    service = PublicKeyService.new(service_slug: params[:service_slug])
+    public_key = service.call
 
-    if token.present?
-      render json: { token: token }, status: 200
+    if public_key.present?
+      render json: { token: public_key }, status: 200
     else
       head :not_found
     end
