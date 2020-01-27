@@ -18,7 +18,7 @@ class PublicKeyService
   private
 
   def ttl_in_seconds
-    60
+    ENV['SERVICE_TOKEN_CACHE_TTL'].to_i
   end
 
   def key
