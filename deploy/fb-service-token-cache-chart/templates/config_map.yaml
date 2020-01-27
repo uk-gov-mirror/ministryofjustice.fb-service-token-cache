@@ -7,5 +7,5 @@ data:
   RAILS_ENV: "production"
   RAILS_SERVE_STATIC_FILES: "false"
   FB_ENVIRONMENT_SLUG: "{{ .Values.environmentName }}"
-  SERVICE_TOKEN_CACHE_TTL: "60"
+  SERVICE_TOKEN_CACHE_TTL: "600"
   RAILS_LOG_TO_STDOUT: "true"
