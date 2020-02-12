@@ -10,6 +10,16 @@ calls, which use the `FB_ENVIRONMENT_SLUG` and `KUBECTL_*` environment variables
 (see below) to construct the secret name and kubectl parameters. It will cache
 successful calls in Elasticache Redis for SERVICE_TOKEN_CACHE_TTL seconds.
 
+## Running tests
+
+Prerequisites:
+
+- Docker
+
+```sh
+make spec
+```
+
 ## Deployment
 
 Continuous Integration (CI) is enabled on this project via CircleCI.
