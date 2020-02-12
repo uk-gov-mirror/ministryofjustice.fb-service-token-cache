@@ -1,6 +1,6 @@
-# fb-service-token-cache
 [![CircleCI](https://circleci.com/gh/ministryofjustice/fb-service-token-cache/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/fb-service-token-cache/tree/master)
-[![Build Status](https://travis-ci.org/ministryofjustice/fb-service-token-cache.svg?branch=master)](https://travis-ci.org/ministryofjustice/fb-service-token-cache)
+
+# fb-service-token-cache
 
 A stand-alone microservice providing a REST endpoint from which other Form
 Builder platform apps (User Datastore, Submitter) can retrieve service tokens.
