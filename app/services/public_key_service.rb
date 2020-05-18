@@ -6,16 +6,23 @@ class PublicKeyService
   end
 
   def call
-    if cached_value
-      cached_value
-    else
-      public_key = Support::ServiceTokenAuthoritativeSource.get_public_key(service_slug: service_slug)
-      adapter.put(key, public_key, ex: ttl_in_seconds)
+    if ActiveModel::Type::Boolean.new.cast(ENV['IGNORE_CACHE'])
       public_key
+    else
+      if cached_value
+        cached_value
+      else
+        adapter.put(key, public_key, ex: ttl_in_seconds)
+        public_key
+      end
     end
   end
 
   private
+
+  def public_key
+    @public_key ||= Support::ServiceTokenAuthoritativeSource.get_public_key(service_slug: service_slug)
+  end
 
   def ttl_in_seconds
     ENV['SERVICE_TOKEN_CACHE_TTL'].to_i

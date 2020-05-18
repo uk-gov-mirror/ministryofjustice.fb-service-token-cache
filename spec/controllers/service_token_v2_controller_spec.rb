@@ -18,5 +18,19 @@ RSpec.describe ServiceTokenV2Controller do
         expect(response).to be_not_found
       end
     end
+
+    context 'when IGNORE_CACHE is set' do
+      before do
+        ENV.stub(:[]).with('IGNORE_CACHE').and_return('true')
+        allow(Support::ServiceTokenAuthoritativeSource).to receive(:get_public_key).and_return('v2-public-key')
+        get :show, params: { service_slug: 'test-service' }
+      end
+
+      it 'should return the public key without using the redis cache' do
+        expect(response).to be_successful
+        expect(Adapters::RedisCacheAdapter).not_to receive(:get)
+        expect(Adapters::RedisCacheAdapter).not_to receive(:put)
+      end
+    end
   end
 end
