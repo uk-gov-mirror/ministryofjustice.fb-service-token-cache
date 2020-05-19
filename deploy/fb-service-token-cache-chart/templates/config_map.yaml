@@ -9,4 +9,4 @@ data:
   FB_ENVIRONMENT_SLUG: "{{ .Values.environmentName }}"
   SERVICE_TOKEN_CACHE_TTL: "600"
   RAILS_LOG_TO_STDOUT: "true"
-  IGNORE_CACHE: "false"
+  IGNORE_CACHE: "true"
