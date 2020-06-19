@@ -23,7 +23,7 @@ group :development do
 end
 
 group :test do
-  gem 'factory_bot_rails', '~> 5.2'
+  gem 'factory_bot_rails', '~> 6.0'
   gem 'shoulda-matchers', '~> 4.3'
   gem 'simplecov'
   gem 'simplecov-console', require: false
