@@ -1,11 +1,14 @@
 ---
 # web front-end
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "fb-service-token-cache-{{ .Values.environmentName }}"
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: "fb-service-token-cache-{{ .Values.environmentName }}"
   template:
     metadata:
       labels:
