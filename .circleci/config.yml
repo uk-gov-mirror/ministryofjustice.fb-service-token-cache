@@ -71,7 +71,6 @@ jobs:
       - run:
           name: cloning deploy scripts
           command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
-      - setup_remote_docker
       - run:
           name: build and push docker images
           environment:
