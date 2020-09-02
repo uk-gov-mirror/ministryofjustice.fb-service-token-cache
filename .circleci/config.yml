@@ -125,7 +125,7 @@ workflows:
       - confirm_live_deploy:
           type: approval
           requires:
-            - build_and_deploy_to_test
+            - trigger_acceptance_tests
       - build_and_deploy_to_live:
           requires:
             - confirm_live_deploy
