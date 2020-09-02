@@ -97,8 +97,11 @@ jobs:
       - image: circleci/ruby:latest
     steps:
       - run:
+          name: cloning deploy scripts
+          command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
+      - run:
           name: "Trigger Acceptance Tests"
-          command: "curl -u ${CIRCLE_TOKEN}: -X POST https://circleci.com/api/v2/project/github/ministryofjustice/fb-acceptance-tests/pipeline -H 'Content-Type: application/json' -H 'Accept: application/json'"
+          command: './deploy-scripts/bin/acceptance_tests'
 
 workflows:
   version: 2
