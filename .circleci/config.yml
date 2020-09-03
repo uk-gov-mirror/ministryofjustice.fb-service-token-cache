@@ -93,8 +93,8 @@ jobs:
             K8S_NAMESPACE: formbuilder-platform-live-production
           command: './deploy-scripts/bin/deploy'
   trigger_acceptance_tests:
-    docker:
-      - image: circleci/ruby:latest
+    working_directory: ~/circle/git/fb-service-token-cache
+    docker: *ecr_base_image
     steps:
       - add_ssh_keys:
           fingerprints:
