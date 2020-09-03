@@ -96,6 +96,9 @@ jobs:
     docker:
       - image: circleci/ruby:latest
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "e3:25:34:15:2b:c4:d3:b7:c3:94:9f:50:dd:c3:0f:de"
       - run:
           name: cloning deploy scripts
           command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
