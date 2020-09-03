@@ -120,13 +120,16 @@ workflows:
             branches:
               only:
                 - master
+                - fix-acceptance-test-circle
       - trigger_acceptance_tests:
           requires:
             - test
             - build_and_deploy_to_test
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - fix-acceptance-test-circle
       - confirm_live_deploy:
           type: approval
           requires:
