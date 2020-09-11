@@ -21,15 +21,15 @@ jobs:
           aws_secret_access_key: $AWS_BUILD_IMAGE_SECRET_ACCESS_KEY
     steps:
       - checkout
-      - add_ssh_keys:
+      - add_ssh_keys: &ssh_keys
           fingerprints:
             - "e3:25:34:15:2b:c4:d3:b7:c3:94:9f:50:dd:c3:0f:de"
-      - run:
+      - run: &base_environment_variables
           name: Setup base environment variable
           command: |
             echo "export BUILD_SHA=$CIRCLE_SHA1" >> $BASH_ENV
             echo "export SSH_FILE_FOR_SECRETS=~/.ssh/id_rsa_e32534152bc4d3b7c3949f50ddc30fde" >> $BASH_ENV
-      - run:
+      - run: &deploy_scripts
           name: cloning deploy scripts
           command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
       - setup_remote_docker
@@ -59,18 +59,10 @@ jobs:
     docker: *ecr_base_image
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "e3:25:34:15:2b:c4:d3:b7:c3:94:9f:50:dd:c3:0f:de"
+      - add_ssh_keys: *ssh_keys
       - setup_remote_docker
-      - run:
-          name: Setup base environment variable
-          command: |
-            echo "export BUILD_SHA=$CIRCLE_SHA1" >> $BASH_ENV
-            echo "export SSH_FILE_FOR_SECRETS=~/.ssh/id_rsa_e32534152bc4d3b7c3949f50ddc30fde" >> $BASH_ENV
-      - run:
-          name: cloning deploy scripts
-          command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
+      - run: *base_environment_variables
+      - run: *deploy_scripts
       - run:
           name: build and push docker images
           environment:
@@ -92,15 +84,14 @@ jobs:
             DEPLOYMENT_ENV: production
             K8S_NAMESPACE: formbuilder-platform-live-production
           command: './deploy-scripts/bin/deploy'
-  trigger_acceptance_tests:
-    working_directory: ~/circle/git/fb-service-token-cache
+  acceptance_tests:
     docker: *ecr_base_image
+    resource_class: large
     steps:
+      - setup_remote_docker
+      - run: *deploy_scripts
       - run:
-          name: cloning deploy scripts
-          command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
-      - run:
-          name: "Trigger Acceptance Tests"
+          name: Run acceptance tests
           command: './deploy-scripts/bin/acceptance_tests'
 
 workflows:
@@ -115,7 +106,7 @@ workflows:
             branches:
               only:
                 - master
-      - trigger_acceptance_tests:
+      - acceptance_tests:
           requires:
             - test
             - build_and_deploy_to_test
@@ -125,7 +116,7 @@ workflows:
       - confirm_live_deploy:
           type: approval
           requires:
-            - trigger_acceptance_tests
+            - acceptance_tests
       - build_and_deploy_to_live:
           requires:
             - confirm_live_deploy
