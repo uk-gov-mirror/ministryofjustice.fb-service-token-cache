@@ -122,21 +122,20 @@ workflows:
   version: 2
   test_and_build:
     jobs:
-      - test
-      - build_and_deploy_to_test:
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
+      # - test
+      #- build_and_deploy_to_test:
+      #    requires:
+      #      - test
+      #    filters:
+      #      branches:
+      #        only:
+      #          - master
       - acceptance_tests:
-          requires:
-            - test
-            - build_and_deploy_to_test
           filters:
             branches:
-              only: master
+              only: 
+                - master
+                - test-datastore
       - slack/approval-notification:
           message: ":portalorangeparrot:  Deployment to Live pending approval  :portalblueparrot:"
           include_job_number_field: false
