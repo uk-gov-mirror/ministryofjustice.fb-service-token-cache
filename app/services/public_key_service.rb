@@ -1,8 +1,9 @@
 class PublicKeyService
-  attr_reader :service_slug
+  attr_reader :service_slug, :namespace
 
-  def initialize(service_slug:)
+  def initialize(service_slug:, namespace: ENV['KUBECTL_SERVICES_NAMESPACE'])
     @service_slug = service_slug
+    @namespace = namespace
   end
 
   def call
@@ -21,7 +22,11 @@ class PublicKeyService
   private
 
   def public_key
-    @public_key ||= Support::ServiceTokenAuthoritativeSource.get_public_key(service_slug: service_slug)
+    @public_key ||=
+      Support::ServiceTokenAuthoritativeSource.get_public_key(
+        service_slug: service_slug,
+        namespace: namespace
+      )
   end
 
   def ttl_in_seconds

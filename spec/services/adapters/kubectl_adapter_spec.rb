@@ -44,5 +44,17 @@ describe Adapters::KubectlAdapter do
         end
       end
     end
+
+    context 'when a CmdFailedError is raised' do
+      subject do
+        described_class.new(secret_name: 'some-secret', namespace: 'some-namespace')
+      end
+
+      it 'should rescue and return empty string' do
+        allow(Adapters::ShellAdapter).to receive(:output_of).and_raise(CmdFailedError)
+
+        expect(subject.get_public_key).to eq('')
+      end
+    end
   end
 end

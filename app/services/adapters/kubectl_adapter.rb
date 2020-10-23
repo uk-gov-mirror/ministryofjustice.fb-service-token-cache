@@ -19,6 +19,9 @@ class Adapters::KubectlAdapter
     ] + [kubectl_args]
 
     Adapters::ShellAdapter.output_of(command)
+  rescue CmdFailedError => e
+    Raven.capture_exception(e)
+    ''
   end
 
   private
