@@ -1,13 +1,14 @@
 class PublicKeyService
-  attr_reader :service_slug, :namespace
+  attr_reader :service_slug, :namespace, :ignore_cache
 
-  def initialize(service_slug:, namespace: ENV['KUBECTL_SERVICES_NAMESPACE'])
+  def initialize(service_slug:, namespace: ENV['KUBECTL_SERVICES_NAMESPACE'], ignore_cache:)
     @service_slug = service_slug
     @namespace = namespace
+    @ignore_cache = ignore_cache
   end
 
   def call
-    if ActiveModel::Type::Boolean.new.cast(ENV['IGNORE_CACHE'])
+    if ignore_cache
       public_key
     else
       if cached_value
