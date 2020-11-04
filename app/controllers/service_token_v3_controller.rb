@@ -2,7 +2,8 @@ class ServiceTokenV3Controller < ApplicationController
   def show
     service = PublicKeyService.new(
       service_slug: params[:application],
-      namespace: params[:namespace]
+      namespace: params[:namespace],
+      ignore_cache: ignore_cache
     )
     public_key = service.call
 
