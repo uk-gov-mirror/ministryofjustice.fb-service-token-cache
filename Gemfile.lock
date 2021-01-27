@@ -132,7 +132,7 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    puma (5.1.1)
+    puma (5.2.0)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -235,7 +235,7 @@ DEPENDENCIES
   guard-rspec
   jwt
   listen
-  puma (~> 5.1)
+  puma (~> 5.2)
   rails (~> 6.1.1)
   redis (~> 4.2)
   rspec-rails (>= 3.5.0)
