@@ -1,7 +1,7 @@
 class ServiceTokenV3Controller < ApplicationController
   def show
     service = PublicKeyService.new(
-      service_slug: params[:application],
+      service_slug: params[:service_slug],
       namespace: params[:namespace],
       ignore_cache: ignore_cache
     )

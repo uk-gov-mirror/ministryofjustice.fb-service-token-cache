@@ -1,8 +1,8 @@
 class Adapters::KubectlAdapter
-  attr_reader :secret_name, :namespace
+  attr_reader :service_slug, :namespace
 
-  def initialize(secret_name:, namespace:)
-    @secret_name = secret_name
+  def initialize(service_slug:, namespace:)
+    @service_slug = service_slug
     @namespace = namespace
 
     validate_params!
@@ -15,7 +15,7 @@ class Adapters::KubectlAdapter
       'configmaps',
       '-o',
       "jsonpath='{.data.ENCODED_PUBLIC_KEY}'",
-      "fb-#{secret_name}-config-map",
+      "fb-#{service_slug}-config-map",
     ] + [kubectl_args]
 
     Adapters::ShellAdapter.output_of(command)
@@ -27,8 +27,8 @@ class Adapters::KubectlAdapter
   private
 
   def validate_params!
-    if !secret_name.match(/\A[a-zA-Z0-9\-_]*\z/)
-      raise ArgumentError.new('rejected potentially dangerous secret_name')
+    if !service_slug.match(/\A[a-zA-Z0-9\-_]*\z/)
+      raise ArgumentError.new('rejected potentially dangerous service_slug')
     end
 
     if !namespace.match(/\A[a-zA-Z0-9\-_]*\z/)
