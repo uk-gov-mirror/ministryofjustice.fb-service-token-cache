@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Adapters::KubectlAdapter do
-  let(:secret_name) { 'my-secret' }
+  let(:service_slug) { 'my-service-slug' }
   let(:namespace) { 'my-namespace' }
 
   before do
@@ -9,17 +9,17 @@ describe Adapters::KubectlAdapter do
   end
 
   subject do
-    described_class.new(secret_name: secret_name, namespace: namespace)
+    described_class.new(service_slug: service_slug, namespace: namespace)
   end
 
   describe '#get_public_key' do
     context 'when code injection' do
-      context 'with dangerous secret_name' do
-        let(:secret_name) { '; curl https://example.com;' }
+      context 'with dangerous service_slug' do
+        let(:service_slug) { '; curl https://example.com;' }
         let(:namespace) { 'some-namespace' }
 
         subject do
-          described_class.new(secret_name: secret_name, namespace: namespace)
+          described_class.new(service_slug: service_slug, namespace: namespace)
         end
 
         it 'raises an error' do
@@ -30,11 +30,11 @@ describe Adapters::KubectlAdapter do
       end
 
       context 'with dangerous namespace' do
-        let(:secret_name) { 'some-namespace' }
+        let(:service_slug) { 'some-namespace' }
         let(:namespace) { '; curl https://example.com;' }
 
         subject do
-          described_class.new(secret_name: secret_name, namespace: namespace)
+          described_class.new(service_slug: service_slug, namespace: namespace)
         end
 
         it 'raises an error' do
@@ -47,7 +47,7 @@ describe Adapters::KubectlAdapter do
 
     context 'when a CmdFailedError is raised' do
       subject do
-        described_class.new(secret_name: 'some-secret', namespace: 'some-namespace')
+        described_class.new(service_slug: 'some-secret', namespace: 'some-namespace')
       end
 
       it 'should rescue and return empty string' do

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ServiceTokenV3Controller do
   describe '#show' do
-    let(:params) { { application: 'test-service', namespace: 'basset-hound' } }
+    let(:params) { { service_slug: 'test-service', namespace: 'basset-hound' } }
 
     it 'returns public key' do
       allow(Support::ServiceTokenAuthoritativeSource).to receive(:get_public_key).and_return('v3-public-key')
